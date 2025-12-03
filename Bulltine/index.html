@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Calcul Bulletin de Paie</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Calcul Bulletin de Paie</h2>
+        <form action="calcul.php" method="post">
+            <fieldset>
+                <legend>Rémunération et Ancienneté</legend>
+                
+                <label for="salaire_base">Salaire de Base payé (DH) :</label>
+                <input type="number" step="0.01" name="salaire_base" value="3000.00" required>
+                
+                <label for="anciennete">Taux d'Ancienneté (pour Prime) :</label>
+                <select name="anciennete" required>
+                    <option value="0" selected>0% (Non calculée)</option>
+                    <option value="0.05">2 à 5 ans (5%)</option>
+                    <option value="0.10">5 à 12 ans (10%)</option>
+                    <option value="0.15">12 à 15 ans (15%)</option>
+                    <option value="0.20">15 à 25 ans (20%)</option>
+                    <option value="0.25">25 ans et + (25%)</option>
+                </select>
+
+                <label for="heures_supp">Montant Heures Supplémentaires + Jours Fériés (DH) :</label>
+                <input type="number" step="0.01" name="heures_supp" value="0.00">
+                
+                <label for="autres_primes">Autres Primes imposables (DH) :</label>
+                <input type="number" step="0.01" name="autres_primes" value="0.00">
+            </fieldset>
+
+            <button type="submit">Calculer le Bulletin de Paie</button>
+        </form>
+    </div>
+</body>
+</html>
