@@ -1,18 +1,22 @@
+/* ================= Body et style général ================= */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: #f4f4f4;
     padding: 20px;
 }
 
+/* ================= Container général ================= */
 .container {
     max-width: 900px;
-    margin: 20px auto;
+    margin: 40px auto; /* فالوسط */
     background: #fff;
     padding: 40px;
     border: 1px solid #004d99;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    text-align: center; /* كلشي ف الوسط */
 }
 
+/* ================= Titres ================= */
 h2 {
     text-align: center;
     color: #004d99; 
@@ -27,29 +31,25 @@ h3 {
     margin-bottom: 30px;
 }
 
-/* --- Formulaire Styles (identique) --- */
-fieldset {
-    border: 1px solid #ddd;
-    padding: 15px;
-    margin-bottom: 20px;
-}
-
-legend {
-    font-weight: bold;
-    color: #004d99;
-    padding: 0 10px;
+/* ================= Formulaire Styles ================= */
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* وسط الفورم */
 }
 
 form label {
-    display: block;
-    margin-top: 10px;
+    display: flex;
+    justify-content: space-between;
+    width: 80%;
+    margin: 10px 0;
     font-weight: bold;
 }
 
 form input[type="number"], form select {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
+    width: 60%;
+    padding: 8px;
+    margin-left: 10px;
     border: 1px solid #ccc;
     box-sizing: border-box;
 }
@@ -57,15 +57,15 @@ form input[type="number"], form select {
 form button {
     background-color: #28a745;
     color: white;
-    padding: 15px;
+    padding: 12px 20px;
     border: none;
     cursor: pointer;
     font-size: 1.1em;
     margin-top: 20px;
-    width: 100%;
+    width: 50%;
 }
 
-/* --- Résultat (Bulletin) Styles --- */
+/* ================= Résultat (Bulletin) Styles ================= */
 .result table {
     width: 100%;
     border-collapse: collapse;
@@ -85,16 +85,8 @@ form button {
     font-size: 1em;
 }
 
-.header-result-small {
-     background-color: #f1f1f1;
-    color: #555;
-    text-align: center;
-    font-weight: normal;
-    font-size: 0.9em;
-}
-
 .header-final {
-     background-color: #004d99;
+    background-color: #004d99;
     color: white;
     text-align: center;
     font-weight: bold;
@@ -113,19 +105,10 @@ form button {
     background-color: #fcfcfc;
 }
 
-.deduction {
-    color: #cc0000; /* Rouge pour les retenues */
-}
-
 .total {
     font-weight: bold;
     background-color: #e9ecef;
     font-size: 1em;
-}
-
-.total-retention {
-    font-weight: bold;
-    background-color: #ffe0e0;
 }
 
 .final-total {
@@ -149,4 +132,37 @@ form button {
     border: 1px dashed #004d99;
     background-color: #e6f7ff;
     font-size: 0.9em;
+}
+
+/* ================= Texte Dashboard ================= */
+#p1 {
+    color: #004d99;
+    text-align: center;
+    font-size: 2em;
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+/* ================= Dashboard Links ================= */
+.dashboard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 40px;
+}
+
+.dashboard a {
+    text-decoration: none;
+    background-color: #004d99;
+    color: white;
+    padding: 15px 30px;
+    margin: 10px;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.dashboard a:hover {
+    background-color: #1f6feb;
+    transform: scale(1.05);
 }

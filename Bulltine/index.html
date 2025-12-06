@@ -1,39 +1,119 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <title>Calcul Bulletin de Paie</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<title>Simulation Fiche de Paie</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <h2>Calcul Bulletin de Paie</h2>
-        <form action="calcul.php" method="post">
-            <fieldset>
-                <legend>Rémunération et Ancienneté</legend>
-                
-                <label for="salaire_base">Salaire de Base payé (DH) :</label>
-                <input type="number" step="0.01" name="salaire_base" value="3000.00" required>
-                
-                <label for="anciennete">Taux d'Ancienneté (pour Prime) :</label>
-                <select name="anciennete" required>
-                    <option value="0" selected>0% (Non calculée)</option>
-                    <option value="0.05">2 à 5 ans (5%)</option>
-                    <option value="0.10">5 à 12 ans (10%)</option>
-                    <option value="0.15">12 à 15 ans (15%)</option>
-                    <option value="0.20">15 à 25 ans (20%)</option>
-                    <option value="0.25">25 ans et + (25%)</option>
-                </select>
+<div class="container">
+    <h2>Simulation Fiche de Paie</h2>
 
-                <label for="heures_supp">Montant Heures Supplémentaires + Jours Fériés (DH) :</label>
-                <input type="number" step="0.01" name="heures_supp" value="0.00">
-                
-                <label for="autres_primes">Autres Primes imposables (DH) :</label>
-                <input type="number" step="0.01" name="autres_primes" value="0.00">
-            </fieldset>
+    <form id="formPaie">
+        <label>Salaire de Base: <input type="number" id="salaire_base" value="5000"></label>
+        <label>Heures Supplémentaires: <input type="number" id="heures_supp" value="500"></label>
+        <label>Prime Ancienneté:
+            <select id="anciennete">
+                <option value="0">0%</option>
+                <option value="5">5%</option>
+                <option value="10">10%</option>
+                <option value="15">15%</option>
+                <option value="20">20%</option>
+                <option value="25">25%</option>
+            </select>
+        </label>
+        <label>Autres Primes: <input type="number" id="autres_primes" value="200"></label>
+        <button type="submit">Calculer</button>
+    </form>
 
-            <button type="submit">Calculer le Bulletin de Paie</button>
-        </form>
-    </div>
+    <div id="resultat" class="result"></div>
+</div>
+
+<script>
+function calculerIRBrut(sni) {
+    const bareme = [
+        [2500.00, 0.00, 0.00],
+        [4166.66, 0.10, 250.00],
+        [5000.00, 0.20, 666.67],
+        [6666.66, 0.30, 1166.67],
+        [15000.00, 0.34, 1433.33],
+    ];
+    let taux = 0, somme_a_deduire = 0;
+    if (sni <= 0) return {ir_brut: 0, taux: 0, somme_a_deduire:0};
+
+    for (let tranche of bareme) {
+        if (sni <= tranche[0]) {
+            taux = tranche[1];
+            somme_a_deduire = tranche[2];
+            break;
+        }
+    }
+    if (sni > 15000) {
+        taux = 0.38;
+        somme_a_deduire = 2033.33;
+    }
+    let ir_brut = (sni * taux) - somme_a_deduire;
+    return {ir_brut: Math.max(0, ir_brut), taux, somme_a_deduire};
+}
+
+function calculerIRNet(ir_brut, nb_charges_famille=0) {
+    const charges_plafonnees = Math.min(nb_charges_famille, 6);
+    const deduction_famille = charges_plafonnees * 30.00;
+    return Math.max(0, ir_brut - deduction_famille);
+}
+
+document.getElementById('formPaie').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const salaire_base = parseFloat(document.getElementById('salaire_base').value) || 0;
+    const heures_supp = parseFloat(document.getElementById('heures_supp').value) || 0;
+    const taux_anciennete = parseFloat(document.getElementById('anciennete').value) / 100 || 0;
+    const autres_primes = parseFloat(document.getElementById('autres_primes').value) || 0;
+
+    const av_nat = 0, taux_cimr = 0, nb_charges = 0;
+
+    const prime_anciennete = salaire_base * taux_anciennete;
+    const salaire_brut = salaire_base + heures_supp + prime_anciennete + autres_primes;
+    const sbg = salaire_brut + av_nat;
+    const sbi = sbg;
+
+    const cnss_plafond = 6000;
+    const ded_cnss = Math.min(sbi, cnss_plafond) * 0.0429;
+    const ded_amo = sbi * 0.0226;
+    const ded_ipe = sbi * 0.0019;
+    const ded_retraite = sbi * taux_cimr;
+    const ded_frais = Math.min(Math.max(0, sbi - av_nat) * 0.20, 2500);
+    const cotisations = ded_cnss + ded_amo + ded_ipe + ded_retraite;
+
+    const sni = Math.max(0, sbi - ded_frais - cotisations);
+
+    const ir = calculerIRBrut(sni);
+    const ir_net = calculerIRNet(ir.ir_brut, nb_charges);
+
+    const total_retenues = cotisations + ir_net;
+    const salaire_net = sbg - total_retenues;
+
+    const total_charges_pat = 
+        Math.min(sbi, cnss_plafond)*0.086 + sbi*0.0411 + sbi*0.016 + sbi*0.0038 + sbi*taux_cimr;
+
+    document.getElementById('resultat').innerHTML = `
+        <table class="minimal-result">
+            <tr><td colspan="2" class="header-result">Éléments de Rémunération</td></tr>
+            <tr><td class="rubrique">Salaire de Base payé</td><td class="montant">${salaire_base.toFixed(2)} DH</td></tr>
+            <tr><td class="rubrique">Prime Ancienneté (${(taux_anciennete*100).toFixed(2)}%)</td><td class="montant">${prime_anciennete.toFixed(2)} DH</td></tr>
+            <tr><td class="rubrique">Autres Primes</td><td class="montant">${(heures_supp+autres_primes).toFixed(2)} DH</td></tr>
+            <tr><td class="rubrique">Avantages Nature</td><td class="montant">${av_nat.toFixed(2)} DH</td></tr>
+            <tr><td class="total">SALAIRE BRUT GLOBAL (SBG)</td><td class="total montant">${sbg.toFixed(2)} DH</td></tr>
+            <tr><td colspan="2" class="header-final">NET À PAYER</td></tr>
+            <tr><td class="final-total">NET À PAYER</td><td class="final-total montant">${salaire_net.toFixed(2)} DH</td></tr>
+        </table>
+        <div class="charges-patronales">
+            <h4>Détails de Retenues</h4>
+            <p>Total Retenues Salariales : ${total_retenues.toFixed(2)} DH</p>
+            <p>Total Charges Patronales : ${total_charges_pat.toFixed(2)} DH</p>
+        </div>
+    `;
+});
+</script>
 </body>
 </html>

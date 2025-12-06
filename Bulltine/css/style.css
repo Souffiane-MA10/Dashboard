@@ -1,0 +1,50 @@
+body {
+    font-family: Arial, sans-serif;
+    background: #f1f1f1;
+    margin: 0;
+    padding: 0;
+}
+
+/* Center all main boxes */
+.login-box, .dashboard {
+    width: 350px;
+    background: #fff;
+    padding: 25px;
+    margin: 90px auto;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.15);
+    text-align: center;
+}
+#p1{
+    background: #ebbbbb;
+    font-size: 44px;
+    line-height: normal;
+    text-align: center;
+}
+.dashboard {
+    width: 500px;
+}
+
+.dashboard h1 {
+    margin-bottom: 20px;
+    color: #333;
+    font-size: 22px;
+}
+
+.dashboard a {
+    display: block;
+    background: #007bff;
+    color: white;
+    padding: 18px;
+    margin: 18px 10px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 20px;
+    transition: 0.3s;
+}
+
+.dashboard a:hover {
+    background: #0056b3;
+}
+/*===================================*/
+

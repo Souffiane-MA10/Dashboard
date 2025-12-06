@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Calculatrice</title>
+<style>
+body{
+    background: #afc1ddff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-family: Arial;
+}
+.calc{
+    background: #3b4655ff;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 0 20px #817b7bff;
+}
+#display{
+    width: 94%;
+    height: 60px;
+    font-size: 25px;
+    border: none;
+    margin-bottom: 15px;
+    border-radius: 10px;
+    text-align: right;
+    padding: 10px;
+    background: #21262d;
+    color: #fff;
+}
+.btn{
+    width: 70px;
+    height: 60px;
+    margin: 5px;
+    font-size: 20px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    background: #30363d;
+    color: #fff;
+    transition: 0.2s;
+}
+.btn:hover{
+    background: #484f58;
+}
+.operator{
+    background: #1f6feb;
+}
+.operator:hover{
+    background: #388bfd;
+}
+.equal{
+    background: #238636;
+}
+.equal:hover{
+    background: #2ea043;
+}
+.clear{
+    background: #da3633;
+}
+.clear:hover{
+    background: #f85149;
+}
+</style>
+</head>
+<body>
+<div class="calc">
+    <input type="text" id="display" readonly>
+
+    <div>
+        <button class="btn clear" data-value="C">C</button>
+        <button class="btn operator" data-value="/">/</button>
+        <button class="btn operator" data-value="*">*</button>
+        <button class="btn operator" data-value="-">-</button>
+    </div>
+
+    <div>
+        <button class="btn" data-value="7">7</button>
+        <button class="btn" data-value="8">8</button>
+        <button class="btn" data-value="9">9</button>
+        <button class="btn operator" data-value="+">+</button>
+    </div>
+
+    <div>
+        <button class="btn" data-value="4">4</button>
+        <button class="btn" data-value="5">5</button>
+        <button class="btn" data-value="6">6</button>
+        <button class="btn operator" data-value="(">(</button>
+    </div>
+
+    <div>
+        <button class="btn" data-value="1">1</button>
+        <button class="btn" data-value="2">2</button>
+        <button class="btn" data-value="3">3</button>
+        <button class="btn operator" data-value=")">)</button>
+    </div>
+
+    <div>
+        <button class="btn" data-value="0">0</button>
+        <button class="btn" data-value=".">.</button>
+        <button class="btn equal" data-value="=">=</button>
+    </div>
+</div>
+
+<script>
+const display = document.getElementById('display');
+const buttons = document.querySelectorAll('.btn');
+
+buttons.forEach(btn => {
+    btn.addEventListener('click', () => {
+        const value = btn.getAttribute('data-value');
+
+        if(value === "C"){
+            display.value = "";
+        } else if(value === "="){
+            try {
+                display.value = eval(display.value);
+            } catch (e) {
+                display.value = "Erreur";
+            }
+        } else {
+            display.value += value;
+        }
+    });
+});
+</script>
+</body>
+</html>
